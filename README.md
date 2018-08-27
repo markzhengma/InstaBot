@@ -2,7 +2,7 @@
 
 ## Instagram auto follower / liker developed with Ruby. 
 
-#### YouTube link: https://youtu.be/PfLcxE8MN-Q
+#### YouTube link: https://youtu.be/EGdbMELkgjM
 
 #### ScreenShots:
 
