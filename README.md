@@ -3,6 +3,12 @@
 ## Instagram auto follower / liker developed with Ruby. 
 
 #### YouTube link: https://youtu.be/PfLcxE8MN-Q
+
+#### ScreenShots:
+
+![](follow.png)
+
+![](like.png)
 ---------------------
 
 * Minor improvement (regarding element selection and confirmation pop-ups) from video (auto-follow): https://youtu.be/cswubkLlocI. 
