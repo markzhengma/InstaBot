@@ -8,8 +8,9 @@ username = $username
 password = $password
 hashtags = $hashtags
 like_counter = 0
+post_index = 0
 # num_of_rounds = 0
-MAX_LIKES = 100
+MAX_LIKES = 80
 start_time = Time.now
 
 # Open Browser, Navigate to Login page
@@ -51,28 +52,54 @@ sleep(2)
 #     ap "No media to like rn, yo. Sorry homie, we tried."
 #   end
 
-hashtags.each do |hashtag|
-    browser.goto "instagram.com/explore/tags/#{hashtag}/"
-
-    if browser.div(class: "_9AhH0").exists?
-    #   Scroll to bottom of window 3 times to load more results (20 per page)
-        ap "#{browser.divs(class: "_9AhH0").size} posts in all"
-        browser.divs(class: "_9AhH0").each do |val|
-            val.click
-            sleep(1)
-            if browser.span(class: ["glyphsSpriteHeart__outline__24__grey_9", "u-__7"]).exists?
-                browser.span(class: ["glyphsSpriteHeart__outline__24__grey_9", "u-__7"]).click
-                like_counter += 1
-            end
-            sleep(1)
-            if browser.button(class: "ckWGn").exists?
-                browser.button(class: "ckWGn").click
-            end
-            sleep(1)
-            ap "#{like_counter} posts liked"
-            break if like_counter >= MAX_LIKES
+loop do
+    hashtags.each do |hashtag|
+        browser.goto "instagram.com/explore/tags/#{hashtag}/"
+        post_index = 0
+        3.times do |i|
+            browser.driver.execute_script("window.scrollBy(0,document.body.scrollHeight)")
+            sleep(1.0 / 2.0)
         end
-        ap "Liked #{like_counter} posts in #{(Time.now - start_time)/60} minutes"
+
+        if browser.div(class: "_9AhH0").exists?
+            ap "#{browser.divs(class: "_9AhH0").size} posts in all"
+            browser.divs(class: "_9AhH0").each do |val|
+                if val.exists?
+                    sleep(1)
+                    begin
+                        val.click
+                    rescue
+                        ap "Selenium click problem. Going to next post."
+                        break
+                    end
+                    sleep(1)
+                    if browser.span(class: ["glyphsSpriteHeart__outline__24__grey_9", "u-__7"]).exists?
+                        browser.span(class: ["glyphsSpriteHeart__outline__24__grey_9", "u-__7"]).click
+                        # if browser.textarea(class: "Ypffh").exists?
+                        #     browser.textarea(class: "Ypffh").set "WUFF it!"
+                        #     sleep(1)
+                        #     browser.form(class: "X7cDz").submit
+                        # end
+                        like_counter += 1
+                        sleep(40)
+                    end
+                    sleep(1)
+                    if browser.button(class: "ckWGn").exists?
+                        browser.button(class: "ckWGn").click
+                        sleep(1)
+                    else
+                        break
+                    end
+                    ap "#{like_counter} posts liked"
+                    post_index += 1
+                end
+                # break if like_counter >= MAX_LIKES
+                break if post_index >= 20
+            end
+            ap "Liked #{like_counter} posts in #{(Time.now - start_time)/60} minutes."
+            ap "#{like_counter/((Time.now - start_time)/60/60)} likes per hour."
+        end
+        # break if like_counter >= MAX_LIKES
     end
 end
 
